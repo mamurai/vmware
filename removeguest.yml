@@ -22,9 +22,9 @@
       state: poweredoff
     register: power_status
 
-  - name: OFFになるまで待つ(1分)
+  - name: OFFになるまで待つ(30sec)
     pause:
-      seconds: 60
+      seconds: 30
     when: power_status.changed
   
   - name: ゲストの削除
