@@ -1,0 +1,90 @@
+#!/usr/bin/expect -f
+
+proc proc_login {} {
+	send "{{sw_user}}\r"
+	expect timeout {
+		send_user "expecting passwordless login but not.\r"
+		exit 1
+	} "Password: " {
+		send_user "Warning: password is required.\r"
+		proc_pass
+	} "> "
+		
+}
+
+proc proc_pass {} {
+	send "{{sw_pass}}\r"
+	expect timeout {
+		send_user "logging in but not response"
+		exit 1
+	} "> "
+}
+
+proc proc_enable {} {
+	send "enable\r"
+	expect timeout {
+		send_user "could not enable\r"
+		exit 1
+	} "# "
+}
+
+proc proc_config {} {
+	send "config\r"
+	expect timeout {
+		send_user "could not config\r"
+		exit 1
+	} "(config)# "
+}
+
+proc logout_config {} {
+	send "exit\r"
+	expect timeout {
+		send_user "timeout on console.\r"
+	} "(config)# " {
+		send "exit\r"
+		expect timeout {
+			send_user "timeout.\r"}
+		} "# \r"
+	}
+	expect "
+
+if { [catch { exec screen -S SERIAL -X quit } msg] } {
+	send_user "removed former screen session."
+} else {
+	exec sleep 2
+}
+
+spawn screen -S SERIAL /dev/ttyUSB0
+
+set timeout 10
+
+send "\r"
+expect timeout {
+	send_user "no response..."
+	exit 1
+} "login: " {
+	proc_login
+	proc_enable
+	proc_config
+} "> " {
+	proc_enable
+	proc_config
+} "# " {
+	proc_config
+}
+
+send "exit\r"
+expect timeout {
+	send_user "could not logout\r"
+} "login: " {
+	exit 0
+} "# " {
+	send "exit\r"
+	expect timeout {
+		send_user "could not exit from config enable mode\r"
+		exit 1
+	}
+	expect "login: "
+}
+
+exit 0
