@@ -1,0 +1,7 @@
+[sw-tor]
+ax1240-1
+
+[sw-tor:vars]
+telnet_user=operator
+telnet_pass=redhat
+serial_host=192.168.99.55
