@@ -43,10 +43,10 @@ proc logout_config {} {
 	} "(config)# " {
 		send "exit\r"
 		expect timeout {
-			send_user "timeout.\r"}
-		} "# \r"
+			send_user "timeout.\r"
+		} "# "
 	}
-	expect "
+}
 
 if { [catch { exec screen -S SERIAL -X quit } msg] } {
 	send_user "removed former screen session."
