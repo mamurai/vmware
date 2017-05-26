@@ -83,8 +83,7 @@ expect timeout {
 	expect timeout {
 		send_user "could not exit from config enable mode\r"
 		exit 1
-	}
-	expect "login: "
+	} "login: "
 }
 
 exit 0
