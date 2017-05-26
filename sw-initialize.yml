@@ -9,3 +9,7 @@
   - name: テンプレートからexpectスクリプトを作製
     template: src=sw-initialize.j2 dest=/tmp/sw-initialize.exp
     delegate_to: "{{ serial_host }}"
+
+  - name: 作製したexpectスクリプトを実行
+    command: expect -f /tmp/sw-initialize.exp
+    delegate_to: "{{ serial_host }}"
