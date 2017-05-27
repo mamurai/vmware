@@ -17,7 +17,7 @@
       dest: /tmp/sw-addvlan.exp
 
   - name: 作製したexpectスクリプトを実行
-    local_action: command expect -f /tmp/sw-initialize.exp
+    local_action: command expect -f /tmp/sw-addvlan.exp
     register: result
 
   - name: 結果の出力
