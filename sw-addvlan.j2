@@ -1,0 +1,84 @@
+#!/usr/bin/expect -f
+
+proc proc_login {} {
+	send "{{sw_user}}\r"
+	expect timeout {
+		send_user "expecting passwordless login but not.\r"
+		exit 1
+	} "Password: " {
+		proc_pass
+	} "> "
+		
+}
+
+proc proc_pass {} {
+	send "{{sw_pass}}\r"
+	expect timeout {
+		send_user "logging in but not response"
+		exit 1
+	} "> "
+}
+
+proc proc_enable {} {
+	send "enable\r"
+	expect timeout {
+		send_user "could not enable\r"
+		exit 1
+	} "# "
+}
+
+proc proc_config {} {
+	send "config\r"
+	expect timeout {
+		send_user "could not config\r"
+		exit 1
+	} "(config)# "
+}
+
+spawn telnet {{ ansible_host }}
+
+set timeout 10
+
+## login & enter login mode
+
+expect timeout {
+	send_user "no response..."
+	exit 1
+} "login: " {
+	proc_login
+	proc_enable
+	proc_config
+}
+
+### 指定ポート(X/X = vlanport)でのVLAN (tag = vlanid)設定追加
+
+# VLANを定義
+send "vlan {{vlanid}}\r"
+expect "(config-vlan)# "
+
+send "exit\r"
+expect "(config)# "
+
+# 指定ポート(vlanport)をtrunkモードにし、指定VLAN(vlanid)を追加
+
+send "interface fastethernet {{vlanport}}\r"
+expect "(config-if)# "
+send "switchport mode trunk\r"
+expect "(config-if)# "
+send "switchport trunk allowed vlan add {{vlanid}}\r"
+expect "(config-if)# "
+send "exit\r"
+expect "(config)# "
+
+# 設定保存
+
+send "save\r"
+expect "(config)# "
+send "exit\r"
+expect "# "
+
+# logout
+
+send "exit\r"
+
+exit 0
