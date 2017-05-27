@@ -1,5 +1,5 @@
 [sw-tor]
-ax1240-1
+ax1240-1 ansible_host=192.168.99.4 netmask=255.255.255.0 telnet_port=0/1
 
 [sw-tor:vars]
 sw_user=operator

@@ -58,6 +58,8 @@ spawn screen -S SERIAL /dev/ttyUSB0
 
 set timeout 10
 
+## login & enter login mode
+
 send "\r"
 expect timeout {
 	send_user "no response..."
@@ -72,6 +74,44 @@ expect timeout {
 } "# " {
 	proc_config
 }
+
+### 自身のIPアドレス設定(0/1)
+
+# VLAN1を定義
+send "vlan 1\r"
+expect "(config-vlan)# "
+
+send "exit\r"
+expect "(config)# "
+
+# 指定ポート(telnet_port)をaccessモードにし、VLAN 1(untagged)に
+
+send "interface fastethernet {{telnet_port}}\r"
+expect "(config-if)# "
+send "switchport mode access\r"
+expect "(config-if)# "
+send "switchport access vlan 1\r"
+expect "(config-if)# "
+send "exit\r"
+expect "(config)# "
+
+# IPアドレス(ansible__host)を設定
+
+send "interface vlan 1\r"
+expect "(config-if)# "
+send "ip address {{ansible_host}} {{netmask}}\r"
+expect "(config-if)# "
+send "exit\r"
+expect "(config)# "
+
+# 設定保存
+
+send "save\r"
+expect "(config)# "
+send "exit\r"
+expect "# "
+
+# logout
 
 send "exit\r"
 expect timeout {
