@@ -9,7 +9,8 @@ proc proc_login {} {
 		send_user "Warning: password is required.\r"
 		proc_pass
 	} "> "
-		
+        send "set terminal pager disable\r"
+        expect " >"
 }
 
 proc proc_pass {} {

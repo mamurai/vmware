@@ -8,7 +8,8 @@ proc proc_login {} {
 	} "Password: " {
 		proc_pass
 	} "> "
-		
+	send "set terminal pager disable\r"
+	expect " >"
 }
 
 proc proc_pass {} {
@@ -35,6 +36,7 @@ proc proc_config {} {
 	} "(config)# "
 }
 
+set env(TERM) vt100
 spawn telnet {{ ansible_host }}
 
 set timeout 10
