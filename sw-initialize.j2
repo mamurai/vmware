@@ -54,6 +54,7 @@ if { [catch { exec screen -S SERIAL -X quit } msg] } {
 	exec sleep 2
 }
 
+set env(TERM) vt100
 spawn screen -S SERIAL /dev/ttyUSB0
 
 set timeout 10
