@@ -2,7 +2,6 @@
 - name: 指定ポートにVLANを追加
   hosts: sw-tor
   gather_facts: False
-  become: yes
 
   vars:
     - vlanport: 0/2
