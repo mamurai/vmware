@@ -11,7 +11,7 @@
     delegate_to: "{{ serial_host }}"
 
   - name: 作製したexpectスクリプトを実行
-    command: expect -f /tmp/sw-initialize.exp
+    shell: expect -f /tmp/sw-initialize.exp
     delegate_to: "{{ serial_host }}"
     register: result
 
