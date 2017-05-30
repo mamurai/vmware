@@ -32,7 +32,7 @@
           datastore: "{{ myds }}"
       networks: 
       - name: "{{ mynetwork }}"
-      - device_type: vmxnet3
+        device_type: vmxnet3
     register: myvm_facts
 
   - name: 作成したVM情報の表示
