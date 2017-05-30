@@ -12,6 +12,7 @@
    - mydc: DC01
    - myds: Datastore
    - mynetwork: VM Network
+   - myipaddr: 192.168.0.101
 
   tasks:
 
@@ -25,7 +26,7 @@
       template: "{{ mytemplate }}"
       datacenter: "{{ mydc }}"
       state: poweredon
-      wait_for_ip_address: no
+      wait_for_ip_address: yes
       disk:
         - size_gb: 5
           type: thin
@@ -33,6 +34,9 @@
       networks: 
       - name: "{{ mynetwork }}"
         device_type: vmxnet3
+        gateway: 192.168.0.1
+        ip: "{{ myipaddr }}"
+        netmask: 255.255.255.0
     register: myvm_facts
 
   - name: 作成したVM情報の表示
