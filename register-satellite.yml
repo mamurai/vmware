@@ -2,19 +2,23 @@
 - name: Satellite 6 (alpha.osaka.redhat.com)のRed_Hat_Japan_Westへ登録
   hosts: all
   vars:
-#    - satellite: alpha.osaka.redhat.com
-    - satellite: satellite.example.com
-#    - org: Red_Hat_Japan_West
-    - org: Default Organization
-#    - activationkey: RHEL7-library
-    - activationkey: rhel6
-    
+   - satellite: 192.168.0.70
+   - org: Default_Organization
+   - activationkey: rhel6
+  
   become: yes
   become_user: root
   tasks:
 
+  - name: Satelliteサーバーの名前解決設定
+    lineinfile:
+      path: /etc/hosts
+      regexp: "^{{ satellite }}"
+      line: '192.168.0.70 sat.example.com'
+
   - name: Satellite登録のための基本パッケージ追加
-    shell: yum -y --nogpgcheck localinstall http://{{satellite}}/pub/katello-ca-consumer-latest.noarch.rpm
+    command: rpm -Uvh http://{{satellite}}/pub/katello-ca-consumer-latest.noarch.rpm
+    #    command: yum -y --nogpgcheck localinstall http://{{satellite}}/pub/katello-ca-consumer-latest.noarch.rpm
 
   - name: Satelliteへの登録
     redhat_subscription:
@@ -22,14 +26,14 @@
       activationkey: '{{activationkey}}'
 
   - name: Satellite6用toolリポジトリの有効化
-    shell: subscription-manager repos --enable=rhel-7-server-satellite-tools-6.2-rpms
+    shell: subscription-manager repos --enable=rhel-6-server-satellite-tools-6.1-rpms
 
   - name: Satelliteエージェントの導入
     yum: name=katello-agent state=latest
 
-  - name: Satelliteが利用するsshキーの登録
-    authorized_key:
-      user: root
-      state: present
-      key: https://{{satellite}}:9090/ssh/pubkey
+#  - name: Satelliteが利用するsshキーの登録
+#    authorized_key:
+#      user: root
+#      state: present
+#      key: https://{{satellite}}:9090/ssh/pubkey
 
