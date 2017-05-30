@@ -17,8 +17,8 @@
       line: '192.168.0.70 sat.example.com'
 
   - name: Satellite登録のための基本パッケージ追加
-    command: rpm -Uvh http://{{satellite}}/pub/katello-ca-consumer-latest.noarch.rpm
-    #    command: yum -y --nogpgcheck localinstall http://{{satellite}}/pub/katello-ca-consumer-latest.noarch.rpm
+    #    command: rpm -Uvh http://{{satellite}}/pub/katello-ca-consumer-latest.noarch.rpm
+    command: yum -y --nogpgcheck localinstall http://{{satellite}}/pub/katello-ca-consumer-latest.noarch.rpm
 
   - name: Satelliteへの登録
     redhat_subscription:
