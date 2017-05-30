@@ -19,7 +19,7 @@
       username: "{{ vcuser }}"
       password: "{{ vcpass }}"
       switch_name: "{{ switch }}"
-      portgroup_name: "{{ pgname }}"
+      portgroup_name: "Network-{{ vlan_id }}"
       vlan_id: "{{ vlan_id }}"
     register: mypg_facts
 
