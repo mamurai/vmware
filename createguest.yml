@@ -25,7 +25,7 @@
       template: "{{ mytemplate }}"
       datacenter: "{{ mydc }}"
       state: poweredon
-      wait_for_ip_address: yes
+      wait_for_ip_address: no
       disk:
         - size_gb: 5
           type: thin
