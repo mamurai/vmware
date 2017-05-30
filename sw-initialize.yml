@@ -1,0 +1,20 @@
+---
+- name: シリアル経由で初期化設定
+  hosts: sw-tor
+  gather_facts: False
+  become: yes
+
+  tasks:
+
+  - name: テンプレートからexpectスクリプトを作製
+    template: src=sw-initialize.j2 dest=/tmp/sw-initialize.exp
+    delegate_to: "{{ serial_host }}"
+
+  - name: 作製したexpectスクリプトを実行
+    shell: expect -f /tmp/sw-initialize.exp
+    delegate_to: "{{ serial_host }}"
+    register: result
+
+  - name: 結果の出力
+    debug:
+      msg: "{{ result }}"

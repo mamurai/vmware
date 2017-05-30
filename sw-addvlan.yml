@@ -1,0 +1,24 @@
+---
+- name: 指定ポートにVLANを追加
+  hosts: sw-tor
+  gather_facts: False
+
+  vars:
+    - vlanport: 0/2
+    - vlanid: 100
+        
+  tasks:
+
+  - name: テンプレートからexpectスクリプトを作製
+    local_action: template
+    args:
+      src: sw-addvlan.j2
+      dest: /tmp/sw-addvlan.exp
+
+  - name: 作製したexpectスクリプトを実行
+    local_action: shell expect -f /tmp/sw-addvlan.exp
+    register: result
+
+  - name: 結果の出力
+    debug:
+      msg: "{{ result }}"
